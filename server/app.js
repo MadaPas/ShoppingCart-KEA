@@ -20,6 +20,6 @@ app.get('/', (req, res) => {
 
 app.use('/api', routes);
 
-connectDB().then(async () => {
-  app.listen(process.env.PORT, () => console.log(`Example app listening on port ${process.env.PORT}!`));
+connectDB();
+app.listen(process.env.PORT, () => console.log(`Example app listening on port ${process.env.PORT}!`));
 });
