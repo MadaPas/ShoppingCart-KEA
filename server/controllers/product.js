@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable consistent-return */
 /* eslint-disable camelcase */
 const asyncHandler = require('express-async-handler');
@@ -84,7 +85,37 @@ const updateProduct = async (req, res) => {
   }
 };
 
+const deleteProduct = async (req, res) => {
+  try {
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(404).json('Wrong product id format. Try again.');
+    }
+    await Product.findById(req.params.id, (err, product) => {
+      if (product === null || product.length === 0) {
+        return res.status(404).json('No product found');
+      }
+      if (err) {
+        return res.status(500).send(err);
+      }
+      Product.findByIdAndRemove(
+        req.params.id,
+        (error, pr) => {
+          if (error) return res.status(500).send(error);
+          const response = {
+            message: 'Product successfully deleted',
+            id: pr._id,
+          };
+          return res.status(200).send(response);
+        },
+      );
+    });
+  } catch (err) {
+    res.status(500).json('Internal server error');
+  }
+};
+
 module.exports.getAllProducts = getAllProducts;
 module.exports.getProduct = getProduct;
 module.exports.addProduct = addProduct;
-module.exports.updateProduct = updateProduct; // handle errors
+module.exports.updateProduct = updateProduct;
+module.exports.deleteProduct = deleteProduct;
