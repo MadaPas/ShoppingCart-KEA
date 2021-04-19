@@ -54,6 +54,7 @@ CREATE TABLE card_types (
   PRIMARY KEY (id)
 );
 
+-- TODO
 CREATE TABLE invoices(
   id INT(11) AUTO_INCREMENT NOT NULL UNIQUE,
   card_type_id INT(11) NOT NULL,
@@ -67,6 +68,7 @@ CREATE TABLE invoices(
         ON DELETE CASCADE
 );
 
+-- TODO
 CREATE TABLE cart_items (
   cart_id INT(11) NOT NULL,
   product_id INT(11) NOT NULL,
@@ -83,7 +85,7 @@ CREATE TABLE cart_items (
 	ON DELETE CASCADE
 
 );
-
+-- done
 CREATE TABLE favourite_products (
   product_id INT(11) NOT NULL,
   user_id INT(11) NOT NULL,
