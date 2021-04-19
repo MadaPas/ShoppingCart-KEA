@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS clothes_store;
 CREATE DATABASE IF NOT EXISTS clothes_store;
 
 USE clothes_store;
-
+-- done
 CREATE TABLE brands (
   id INT(11) AUTO_INCREMENT NOT NULL UNIQUE,
   name VARCHAR(120) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE brands (
 
   PRIMARY KEY (id)
 );
-
+-- done
 CREATE TABLE products (
   id INT(11) AUTO_INCREMENT NOT NULL UNIQUE,
   brand_id INT(11) NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE roles (
 
   PRIMARY KEY (id)
 );
-
+-- done (refactor)
 CREATE TABLE users (
   id INT(11) AUTO_INCREMENT NOT NULL UNIQUE,
   role_id(11) NOT NULL,
@@ -84,7 +84,6 @@ CREATE TABLE cart_items (
 
 );
 
-
 CREATE TABLE favourite_products (
   product_id INT(11) NOT NULL,
   user_id INT(11) NOT NULL,
@@ -95,6 +94,3 @@ CREATE TABLE favourite_products (
   FOREIGN KEY (user_id) REFERENCES users(id)
        ON DELETE CASCADE
 );
-
-
-
