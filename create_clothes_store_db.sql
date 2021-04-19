@@ -46,7 +46,7 @@ CREATE TABLE users (
   FOREIGN KEY (role_id) REFERENCES roles(id)
         ON DELETE CASCADE
 );
-
+-- done
 CREATE TABLE card_types (
   id INT(11) NOT NULL,
   name VARCHAR(120),
@@ -69,9 +69,9 @@ CREATE TABLE invoices(
 );
 
 -- TODO
-CREATE TABLE cart_items (
-  cart_id INT(11) NOT NULL,
-  product_id INT(11) NOT NULL,
+CREATE TABLE carts (
+  user_id INT(11) NOT NULL,
+  product_id INT(11) NOT NULL, -- lookup
   invoice_id (INT(11) NOT NULL
   quantity INT(11) NOT NULL,
   unit_price FLOAT(11) NOT NULL,
@@ -85,6 +85,7 @@ CREATE TABLE cart_items (
 	ON DELETE CASCADE
 
 );
+
 -- done
 CREATE TABLE favourite_products (
   product_id INT(11) NOT NULL,
@@ -95,4 +96,14 @@ CREATE TABLE favourite_products (
        ON DELETE CASCADE,
   FOREIGN KEY (user_id) REFERENCES users(id)
        ON DELETE CASCADE
+);
+
+CREATE TABLE carts(
+  id INT(5) AUTO_INCREMENT NOT NULL UNIQUE,
+  user_id INT(5) NOT NULL,
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
 );

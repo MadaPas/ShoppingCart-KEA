@@ -5,17 +5,17 @@ const favouriteSchema = new mongoose.Schema(
   {
     product_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'brands',
+      ref: 'products',
       required: true,
     },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'brands',
+      ref: 'users',
       required: true,
     },
   },
 );
 
-const Favourite = mongoose.model('favourites', favouriteSchema);
+const Favourite = mongoose.model('favourite_products', favouriteSchema);
 
 module.exports.Favourite = Favourite;

@@ -4,7 +4,7 @@ const router = express.Router();
 
 const {
   getAllFavourites, getFavourite, addFavourite, deleteFavourite,
-} = require('../controllers/role');
+} = require('../controllers/favourite');
 
 router.get('/', getAllFavourites);
 router.get('/:id', getFavourite);
