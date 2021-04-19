@@ -8,7 +8,8 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
     brand_id: {
-      type: Number,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'brands',
       required: true,
     },
     unit_price: {
