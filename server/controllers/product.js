@@ -57,15 +57,6 @@ const addProduct = asyncHandler(async (req, res) => {
 });
 
 const updateProduct = async (req, res) => {
-  const {
-    name,
-    brand_id,
-    unit_price,
-    rating,
-    description,
-    size,
-  } = req.body;
-
   try {
     if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
       return res.status(404).json('Wrong product id format. Try again.');
