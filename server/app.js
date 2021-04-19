@@ -23,4 +23,5 @@ app.get('/', (req, res) => {
 app.use('/api', routes);
 
 connectDB();
+
 app.listen(process.env.PORT, () => console.log(`Example app listening on port ${process.env.PORT}!`));
