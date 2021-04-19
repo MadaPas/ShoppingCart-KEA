@@ -12,7 +12,4 @@ router.post('/', addBrand);
 router.put('/:id', updateBrand);
 router.delete('/:id', deleteBrand);
 
-// TODO - delete - deleteBrand (isAdmin) (with access to route)
-// TODO - put - updateBrand
-
 module.exports = router;
