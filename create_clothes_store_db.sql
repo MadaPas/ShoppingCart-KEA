@@ -62,9 +62,12 @@ CREATE TABLE invoices(
   card_holder VARCHAR(120) NOT NULL,
   date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
   total_price FLOAT(11) NOT NULL,
+  cart_id (INT(11) NOT NULL
 
   PRIMARY KEY (id),
   FOREIGN KEY (card_type_id ) REFERENCES card_types(id)
+        ON DELETE CASCADE
+  FOREIGN KEY (user_id ) REFERENCES users(id)
         ON DELETE CASCADE
 );
 
@@ -72,12 +75,10 @@ CREATE TABLE invoices(
 CREATE TABLE carts (
   user_id INT(11) NOT NULL,
   product_id INT(11) NOT NULL, -- lookup
-  invoice_id (INT(11) NOT NULL
-  quantity INT(11) NOT NULL,
   unit_price FLOAT(11) NOT NULL,
 
-  PRIMARY KEY (cart_id, product_id),
-  FOREIGN KEY (cart_id) REFERENCES carts(id)
+  PRIMARY KEY (user_id, product_id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
         ON DELETE CASCADE,
   FOREIGN KEY (product_id) REFERENCES products(id)
         ON DELETE CASCADE,
