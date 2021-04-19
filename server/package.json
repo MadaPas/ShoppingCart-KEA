@@ -4,10 +4,10 @@
   "description": "ShoppingCart backend",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --exit './{,!(node_modules)/**}/*.spec.js'",
+    "start": "nodemon app.js",
     "lint": "eslint '**/*.js'",
-    "lint-watch": "nodemon --exec 'npm run lint --silent'",
-    "start": "nodemon app"
+    "lint-watch": "nodemon --exec 'npm run lint --silent'"
   },
   "repository": {
     "type": "git",
