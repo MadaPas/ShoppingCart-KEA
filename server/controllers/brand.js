@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable consistent-return */
 /* eslint-disable camelcase */
 const asyncHandler = require('express-async-handler');
@@ -76,7 +77,37 @@ const updateBrand = async (req, res) => {
   }
 };
 
+const deleteBrand = async (req, res) => {
+  try {
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(404).json('Wrong brand id format. Try again.');
+    }
+    await Brand.findById(req.params.id, (err, brand) => {
+      if (brand === null || brand.length === 0) {
+        return res.status(404).json('No brand found');
+      }
+      if (err) {
+        return res.status(500).send(err);
+      }
+      Brand.findByIdAndRemove(
+        req.params.id,
+        (error, pr) => {
+          if (error) return res.status(500).send(error);
+          const response = {
+            message: 'Brand successfully deleted',
+            id: pr._id,
+          };
+          return res.status(200).send(response);
+        },
+      );
+    });
+  } catch (err) {
+    res.status(500).json('Internal server error');
+  }
+};
+
 module.exports.getAllBrands = getAllBrands;
 module.exports.getBrand = getBrand;
 module.exports.addBrand = addBrand;
-module.exports.updateBrand = updateBrand; // handle errors
+module.exports.updateBrand = updateBrand;
+module.exports.deleteBrand = deleteBrand;
