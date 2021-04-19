@@ -31,7 +31,7 @@ CREATE TABLE roles (
 
   PRIMARY KEY (id)
 );
--- done (refactor)
+-- done
 CREATE TABLE users (
   id INT(11) AUTO_INCREMENT NOT NULL UNIQUE,
   role_id(11) NOT NULL,
