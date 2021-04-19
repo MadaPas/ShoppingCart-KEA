@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-console */
 const asyncHandler = require('express-async-handler');
 
@@ -26,7 +27,9 @@ const getUser = (req, res) => {
 };
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const {
+    role_id, first_name, last_name, password, email,
+  } = req.body;
 
   const userExists = await User.findOne({ email });
 
@@ -35,12 +38,15 @@ const registerUser = asyncHandler(async (req, res) => {
     // throw new Error('User already exists.');
   }
 
-  const user = await User.create({ name, email, password });
+  const user = await User.create({
+    role_id, first_name, last_name, email, password,
+  });
 
   return res.status(201).json({
-    name: user.name,
+    role_id: user.role_id,
+    first_name: user.first_name,
+    last_name: user.last_name,
     email: user.email,
-    isAdmin: user.isAdmin,
     token: user.generateToken(),
   });
 });

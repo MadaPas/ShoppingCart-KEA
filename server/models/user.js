@@ -1,32 +1,38 @@
 /* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+// 607d67fe24b72122ed6bcd81 CUSTOMER
+// 607d680424b72122ed6bcd82 ADMIN
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    role_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'roles',
+      required: true,
+    },
+    first_name: {
       type: String,
       required: true,
     },
-    email: {
+    last_name: {
       type: String,
       required: true,
-      unique: true,
     },
     password: {
       type: String,
       required: true,
       select: false,
     },
-    isAdmin: {
-      type: Boolean,
+    email: {
+      type: String,
       required: true,
-      default: false,
+      unique: true,
     },
   },
-  // {
-  //   timestamps: true, // createdAt. updatedAt
-  // },
+  {
+    timestamps: true, // createdAt. updatedAt
+  },
   {
     versionKey: false, // https://stackoverflow.com/questions/12495891/what-is-the-v-field-in-mongoose
   },

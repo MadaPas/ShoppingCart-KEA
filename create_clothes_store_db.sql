@@ -24,7 +24,7 @@ CREATE TABLE products (
   FOREIGN KEY (brand_id) REFERENCES brands(id)
        ON DELETE CASCADE
 );
-
+-- done
 CREATE TABLE roles (
   id INT(11) AUTO_INCREMENT NOT NULL UNIQUE,
   name VARCHAR(120) NOT NULL,
