@@ -13,7 +13,7 @@ const usersRoutes = require('./api/user.js');
 
 router.use('/brands', brandsRoutes);
 router.use('/cards', cardTypesRoutes);
-router.use('/cartItems', cartItemsRoutes);
+router.use('/items', cartItemsRoutes);
 router.use('/favourites', favouriteProductsRoutes);
 router.use('/invoices', invoicesRoutes);
 router.use('/products', productsRoutes);
