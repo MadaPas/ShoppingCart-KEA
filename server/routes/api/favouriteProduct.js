@@ -7,7 +7,10 @@ const {
 const router = express.Router();
 
 const {
-  getAllFavourites, getFavourite, addFavourite, deleteFavourite,
+  getAllFavourites,
+  getFavourite,
+  addFavourite,
+  deleteFavourite,
 } = require('../../controllers/favourite');
 
 router.get('/', [authJwt.verifyToken, getAllFavourites]);
