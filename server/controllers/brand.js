@@ -25,12 +25,10 @@ const getBrand = (req, res) => Brand.findById(req.params.id, (err, brand) => {
   }
   return res.status(200).json(brand);
 });
-};
 
 const addBrand = asyncHandler(async (req, res) => {
   const {
     name,
-    description,
   } = req.body;
   const prooductExists = await Brand.findOne({ name });
 
