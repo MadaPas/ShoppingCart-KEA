@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 const asyncHandler = require('express-async-handler');
 
-const { User } = require('../models/user');
+const { User } = require('../models/User');
 
 const getAllUsers = async (req, res) => {
   await User.find({}, (err, users) => {

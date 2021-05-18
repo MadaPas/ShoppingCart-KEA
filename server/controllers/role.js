@@ -4,7 +4,7 @@
 const asyncHandler = require('express-async-handler');
 const {
   Role,
-} = require('../models/roles');
+} = require('../models/Role');
 
 const getAllRoles = async (req, res) => {
   await Role.find({}, (err, roles) => {

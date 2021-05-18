@@ -4,7 +4,7 @@
 const asyncHandler = require('express-async-handler');
 const {
   CardType,
-} = require('../models/cardTypes');
+} = require('../models/CardType');
 
 const getAllCardTypes = async (req, res) => {
   await CardType.find({}, (err, cardTypes) => {

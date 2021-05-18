@@ -4,7 +4,7 @@
 const asyncHandler = require('express-async-handler');
 const {
   Favourite,
-} = require('../models/favourites');
+} = require('../models/FavouriteProduct');
 
 const getAllFavourites = async (req, res) => {
   await Favourite.find({}, (err, favourites) => {
