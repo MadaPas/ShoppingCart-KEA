@@ -9,7 +9,10 @@ const {
 const getAllBrands = async (req, res) => {
   try {
     Brand.find({})
-      .then(brands => res.status(200).json(brands))
+      .then(brands => res.status(200).json({
+        message: 'Data retrieved successfully',
+        data: brands,
+      }))
       .catch(err => res.send(err));
   } catch (err) {
     return res.status(500).json(`Internal server error: ${err}`);
