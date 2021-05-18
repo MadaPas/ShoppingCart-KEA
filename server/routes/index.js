@@ -1,10 +1,10 @@
 const express = require('express');
 const userRoutes = require('./user.js');
-const productRoutes = require('./product.js');
-const brandsRoutes = require('./brand.js');
-const rolesRoutes = require('./role.js');
-const cardTypesRoutes = require('./cardType.js');
-const favouritesRoutes = require('./favourite.js');
+const productRoutes = require('./api/product.js');
+const brandsRoutes = require('./api/brand.js');
+const rolesRoutes = require('./api/role.js');
+const cardTypesRoutes = require('./api/cardType.js');
+const favouritesRoutes = require('./api/favourite.js');
 
 const router = express.Router();
 

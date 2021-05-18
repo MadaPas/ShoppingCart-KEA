@@ -4,7 +4,7 @@ const router = express.Router();
 
 const {
   getAllBrands, getBrand, updateBrand, addBrand, deleteBrand,
-} = require('../controllers/brand');
+} = require('../../controllers/brand');
 
 router.get('/', getAllBrands);
 router.get('/:id', getBrand);

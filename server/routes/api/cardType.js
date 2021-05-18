@@ -4,7 +4,7 @@ const router = express.Router();
 
 const {
   getAllCardTypes, getCardType, updateCardType, addCardType, deleteCardType,
-} = require('../controllers/cardType');
+} = require('../../controllers/cardType');
 
 router.get('/', getAllCardTypes);
 router.get('/:id', getCardType);
