@@ -67,7 +67,7 @@ const updateBrand = async (req, res) => {
     await Brand.findById(req.params.id, (err, brand) => {
       if (brand === null || brand.length === 0) {
         return res.status(404).json({
-          message: 'No brand type found. Please try again.',
+          message: 'No brand found. Please try again.',
         });
       }
       if (err) {
@@ -105,7 +105,7 @@ const deleteBrand = async (req, res) => {
     await Brand.findById(req.params.id, (err, brand) => {
       if (brand === null || brand.length === 0) {
         return res.status(404).json({
-          message: 'No brand type found. Please try again.',
+          message: 'No brand found. Please try again.',
         });
       }
       if (err) {
