@@ -16,12 +16,8 @@ const getAllBrands = async (req, res) => {
   }
 };
 
-const getBrand = (req, res) => {
-  if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-    return res.status(404).json('Wrong Brand id format. Try again.');
-  }
-  return Brand.findById(req.params.id, (err, brand) => {
-    if (brand === null || brand.length === 0) {
+const getBrand = (req, res) => Brand.findById(req.params.id, (err, brand) => {
+  if (brand === null || brand.length === 0) {
     return res.status(404).json('No brand found. Please try again.');
   }
   if (err) {
