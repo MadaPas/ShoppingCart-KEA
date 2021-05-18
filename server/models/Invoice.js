@@ -16,14 +16,12 @@ const invoiceSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    cart_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'carts',
-      required: true,
+    date: {
+      type: Date,
     },
-  },
-  {
-    timestamps: true, // createdAt. updatedAt
+    total_price: {
+      type: String,
+    },
   },
 );
 

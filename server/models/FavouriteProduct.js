@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
 
-const favouriteSchema = new mongoose.Schema(
+const favouriteProductSchema = new mongoose.Schema(
   {
     product_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -16,6 +16,6 @@ const favouriteSchema = new mongoose.Schema(
   },
 );
 
-const Favourite = mongoose.model('favourite_products', favouriteSchema);
+const FavouriteProduct = mongoose.model('favourite_products', favouriteProductSchema);
 
-module.exports.Favourite = Favourite;
+module.exports.FavouriteProduct = FavouriteProduct;

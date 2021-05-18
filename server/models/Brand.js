@@ -8,6 +8,10 @@ const brandSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      unique: {
+        args: 'name',
+        msg: 'This name is already taken!',
+      },
     },
     description: {
       type: String,
