@@ -1,6 +1,7 @@
+/* eslint-disable max-len */
 const express = require('express');
 const {
-  authJwt,
+  // authJwt,
   authParams,
 } = require('../../middlewares/auth');
 
@@ -12,8 +13,10 @@ const {
   //   addInvoice,
 } = require('../../controllers/invoice');
 
-router.get('/', [authJwt.verifyToken, authJwt.isEmployeeOrAdmin, getAllInvoices]);
-router.get('/:id', [authParams.verifyIdParam, authJwt.verifyToken, authJwt.isEmployeeOrAdmin, getInvoice]);
+// router.get('/', [authJwt.verifyToken, authJwt.isEmployeeOrAdmin, getAllInvoices]);
+// router.get('/:id', [authParams.verifyIdParam, authJwt.verifyToken, authJwt.isEmployeeOrAdmin, getInvoice]);
+router.get('/', [getAllInvoices]);
+router.get('/:id', [authParams.verifyIdParam, getInvoice]);
 // router.post('/', addInvoice); // under development -- transactions fix for mongo
 
 module.exports = router;

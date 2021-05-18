@@ -7,21 +7,39 @@ const {
 } = require('../models/Invoice');
 
 const getAllInvoices = async (req, res) => {
-  await Invoice.find({}, (err, invoices) => {
-    if (err) res.status(500).send(err);
-    res.status(200).json(invoices);
-  });
-};
-
-const getInvoice = async (req, res) => {
   try {
-    await Invoice.findById(req.params.id)
-      .then(data => res.status(200).json(data))
-      .catch(err => res.send(err));
+    Invoice.find({})
+      .then(invoices => res.status(200).json({
+        message: 'Data retrieved successfully.',
+        data: invoices,
+      }))
+      .catch(err => res.json({
+        error: err,
+      }));
   } catch (err) {
-    return res.status(500).json('Internal server error');
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
   }
 };
 
+const getInvoice = (req, res) => Invoice.findById(req.params.id, (err, invoice) => {
+  if (invoice === null || invoice.length === 0) {
+    return res.status(404).json({
+      message: 'No invoice found. Please try again.',
+    });
+  }
+  if (err) {
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
+  }
+  return res.status(200).json({
+    message: 'Data retrieved successfully.',
+    data: invoice,
+  });
+});
+
+// TODO - transactions (add an invioce)
 module.exports.getAllInvoices = getAllInvoices;
 module.exports.getInvoice = getInvoice;
