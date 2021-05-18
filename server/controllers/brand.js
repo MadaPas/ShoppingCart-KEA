@@ -22,13 +22,13 @@ const getBrand = (req, res) => {
   }
   return Brand.findById(req.params.id, (err, brand) => {
     if (brand === null || brand.length === 0) {
-      return res.status(404).json('No brand found');
-    }
-    if (err) {
-      return res.status(500).send(err);
-    }
-    return res.status(200).json(brand);
-  });
+    return res.status(404).json('No brand found. Please try again.');
+  }
+  if (err) {
+    return res.status(500).send(err);
+  }
+  return res.status(200).json(brand);
+});
 };
 
 const addBrand = asyncHandler(async (req, res) => {
