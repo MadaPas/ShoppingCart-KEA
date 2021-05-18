@@ -42,7 +42,7 @@ const addBrand = asyncHandler(async (req, res) => {
   const brand = await Brand.create(req.body);
 
   return res.status(200).json({
-    message: 'Brand created.',
+    message: 'Brand created successfully.',
     brand,
   });
 });
@@ -54,7 +54,7 @@ const updateBrand = async (req, res) => {
     }
     const newBrand = await Brand.findById(req.params.id, (err, brand) => {
       if (brand === null || brand.length === 0) {
-        return res.status(404).json('No brand found');
+        return res.status(404).json('No brand found. Please try again.');
       }
       if (err) {
         return res.status(500).send(err);
@@ -69,7 +69,10 @@ const updateBrand = async (req, res) => {
         },
       );
     });
-    return newBrand;
+    return res.status(200).json({
+      message: 'Brand updated successfully.',
+      newBrand,
+    });
   } catch (err) {
     res.status(500).json('Internal server error');
   }
