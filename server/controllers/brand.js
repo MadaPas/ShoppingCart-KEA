@@ -38,13 +38,11 @@ const addBrand = asyncHandler(async (req, res) => {
     return res.status(400).json('This brand already exists.');
   }
 
-  const brand = await Brand.create({
-    name, description,
-  });
+  const brand = await Brand.create(req.body);
 
-  return res.status(201).json({
-    name: brand.name,
-    description: brand.description,
+  return res.status(200).json({
+    message: 'Brand created.',
+    brand,
   });
 });
 
