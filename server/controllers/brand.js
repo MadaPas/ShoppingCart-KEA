@@ -7,102 +7,131 @@ const {
 } = require('../models/Brand');
 
 const getAllBrands = async (req, res) => {
-  await Brand.find({}, (err, brands) => {
-    if (err) res.status(500).send(err);
-    res.status(200).json(brands);
-  });
+  try {
+    Brand.find({})
+      .then(brands => res.status(200).json({
+        message: 'Data retrieved successfully.',
+        data: brands,
+      }))
+      .catch(err => res.json({
+        error: err,
+      }));
+  } catch (err) {
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
+  }
 };
 
-const getBrand = (req, res) => {
-  if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-    return res.status(404).json('Wrong Brand id format. Try again.');
+const getBrand = (req, res) => Brand.findById(req.params.id, (err, brand) => {
+  if (brand === null || brand.length === 0) {
+    return res.status(404).json({
+      message: 'No brand found. Please try again.',
+    });
   }
-  return Brand.findById(req.params.id, (err, brand) => {
-    if (brand === null || brand.length === 0) {
-      return res.status(404).json('No brand found');
-    }
-    if (err) {
-      return res.status(500).send(err);
-    }
-    return res.status(200).json(brand);
+  if (err) {
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
+  }
+  return res.status(200).json({
+    message: 'Data retrieved successfully.',
+    data: brand,
   });
-};
+});
 
 const addBrand = asyncHandler(async (req, res) => {
   const {
     name,
-    description,
   } = req.body;
-  const prooductExists = await Brand.findOne({ name });
-
-  if (prooductExists) {
-    return res.status(400).json('This brand already exists.');
-  }
-
-  const brand = await Brand.create({
-    name, description,
+  const exists = await Brand.findOne({
+    name,
   });
 
-  return res.status(201).json({
-    name: brand.name,
-    description: brand.description,
+  if (exists) {
+    return res.status(400).json({
+      message: 'This brand already exists.',
+    });
+  }
+
+  const brand = await Brand.create(req.body);
+
+  return res.status(200).json({
+    message: 'Brand created successfully.',
+    data: brand,
   });
 });
 
 const updateBrand = async (req, res) => {
   try {
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(404).json('Wrong brand id format. Try again.');
-    }
-    const newBrand = await Brand.findById(req.params.id, (err, brand) => {
+    await Brand.findById(req.params.id, (err, brand) => {
       if (brand === null || brand.length === 0) {
-        return res.status(404).json('No brand found');
+        return res.status(404).json({
+          message: 'No brand found. Please try again.',
+        });
       }
       if (err) {
-        return res.status(500).send(err);
+        return res.status(500).json({
+          message: `Internal server error: ${err}`,
+        });
       }
       Brand.findByIdAndUpdate(
         req.params.id,
-        req.body,
-        { new: true },
+        req.body, {
+          new: true,
+        },
         (error, pr) => {
-          if (error) return res.status(500).send(error);
-          return res.send(pr);
+          if (error) {
+            return res.status(500).json({
+              message: `Internal server error: ${error}`,
+            });
+          }
+          return res.status(200).json({
+            message: 'Brand updated successfully.',
+            data: pr,
+          });
         },
       );
     });
-    return newBrand;
   } catch (err) {
-    res.status(500).json('Internal server error');
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
   }
 };
 
 const deleteBrand = async (req, res) => {
   try {
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(404).json('Wrong brand id format. Try again.');
-    }
     await Brand.findById(req.params.id, (err, brand) => {
       if (brand === null || brand.length === 0) {
-        return res.status(404).json('No brand found');
+        return res.status(404).json({
+          message: 'No brand found. Please try again.',
+        });
       }
       if (err) {
-        return res.status(500).send(err);
+        return res.status(500).json({
+          message: `Internal server error: ${err}`,
+        });
       }
       Brand.findByIdAndRemove(
         req.params.id,
         (error, pr) => {
-          if (error) return res.status(500).send(error);
-          const response = {
-            message: 'Brand successfully deleted',
+          if (error) {
+            return res.status(500).json({
+              message: `Internal server error: ${error}`,
+            });
+          }
+          return res.status(200).json({
+            message: 'Brand deleted successfully.',
             id: pr._id,
-          };
-          return res.status(200).send(response);
+          });
         },
       );
     });
   } catch (err) {
-    res.status(500).json('Internal server error');
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
   }
 };
 

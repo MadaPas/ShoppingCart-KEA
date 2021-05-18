@@ -7,110 +7,131 @@ const {
 } = require('../models/Product');
 
 const getAllProducts = async (req, res) => {
-  await Product.find({}, (err, products) => {
-    if (err) res.status(500).send(err);
-    res.status(200).json(products);
-  });
+  try {
+    Product.find({})
+      .then(products => res.status(200).json({
+        message: 'Data retrieved successfully.',
+        data: products,
+      }))
+      .catch(err => res.json({
+        error: err,
+      }));
+  } catch (err) {
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
+  }
 };
 
-const getProduct = (req, res) => {
-  if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-    return res.status(404).json('Wrong product id format. Try again.');
+const getProduct = (req, res) => Product.findById(req.params.id, (err, product) => {
+  if (product === null || product.length === 0) {
+    return res.status(404).json({
+      message: 'No product found. Please try again.',
+    });
   }
-  return Product.findById(req.params.id, (err, product) => {
-    if (product === null || product.length === 0) {
-      return res.status(404).json('No product found');
-    }
-    if (err) {
-      return res.status(500).send(err);
-    }
-    return res.status(200).json(product);
+  if (err) {
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
+  }
+  return res.status(200).json({
+    message: 'Data retrieved successfully.',
+    data: product,
   });
-};
+});
 
 const addProduct = asyncHandler(async (req, res) => {
   const {
     name,
-    brand_id,
-    unit_price,
-    rating,
-    description,
-    size,
   } = req.body;
-  const prooductExists = await Product.findOne({ name });
-
-  if (prooductExists) {
-    return res.status(400).json('This product already exists.');
-  }
-
-  const product = await Product.create({
-    name, brand_id, unit_price, rating, description, size,
+  const exists = await Product.findOne({
+    name,
   });
 
-  return res.status(201).json({
-    name: product.name,
-    brand_id: product.brand_id,
-    unit_price: product.unit_price,
-    rating: product.rating,
-    description: product.description,
-    size: product.size,
+  if (exists) {
+    return res.status(400).json({
+      message: 'This product already exists.',
+    });
+  }
+
+  const product = await Product.create(req.body);
+
+  return res.status(200).json({
+    message: 'product created successfully.',
+    data: product,
   });
 });
 
 const updateProduct = async (req, res) => {
   try {
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(404).json('Wrong product id format. Try again.');
-    }
-    const newProduct = await Product.findById(req.params.id, (err, product) => {
+    await Product.findById(req.params.id, (err, product) => {
       if (product === null || product.length === 0) {
-        return res.status(404).json('No product found');
+        return res.status(404).json({
+          message: 'No product found. Please try again.',
+        });
       }
       if (err) {
-        return res.status(500).send(err);
+        return res.status(500).json({
+          message: `Internal server error: ${err}`,
+        });
       }
       Product.findByIdAndUpdate(
         req.params.id,
-        req.body,
-        { new: true },
+        req.body, {
+          new: true,
+        },
         (error, pr) => {
-          if (error) return res.status(500).send(error);
-          return res.send(pr);
+          if (error) {
+            return res.status(500).json({
+              message: `Internal server error: ${error}`,
+            });
+          }
+          return res.status(200).json({
+            message: 'Product updated successfully.',
+            data: pr,
+          });
         },
       );
     });
-    return newProduct;
   } catch (err) {
-    res.status(500).json('Internal server error');
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
   }
 };
 
 const deleteProduct = async (req, res) => {
   try {
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(404).json('Wrong product id format. Try again.');
-    }
     await Product.findById(req.params.id, (err, product) => {
       if (product === null || product.length === 0) {
-        return res.status(404).json('No product found');
+        return res.status(404).json({
+          message: 'No product found. Please try again.',
+        });
       }
       if (err) {
-        return res.status(500).send(err);
+        return res.status(500).json({
+          message: `Internal server error: ${err}`,
+        });
       }
       Product.findByIdAndRemove(
         req.params.id,
         (error, pr) => {
-          if (error) return res.status(500).send(error);
-          const response = {
-            message: 'Product successfully deleted',
+          if (error) {
+            return res.status(500).json({
+              message: `Internal server error: ${error}`,
+            });
+          }
+          return res.status(200).json({
+            message: 'Product deleted successfully.',
             id: pr._id,
-          };
-          return res.status(200).send(response);
+          });
         },
       );
     });
   } catch (err) {
-    res.status(500).json('Internal server error');
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
   }
 };
 

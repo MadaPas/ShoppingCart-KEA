@@ -1,56 +1,151 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable consistent-return */
 /* eslint-disable camelcase */
 /* eslint-disable no-console */
 const asyncHandler = require('express-async-handler');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
-const { User } = require('../models/User');
+const {
+  User,
+} = require('../models/User');
 
 const getAllUsers = async (req, res) => {
-  await User.find({}, (err, users) => {
-    if (err) res.status(500).send(err);
-    res.status(200).json(users);
-  });
-};
-
-const getUser = (req, res) => {
-  if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-    return res.status(404).json('No user found');
+  try {
+    await User.find({})
+      .then(users => res.status(200).json({
+        message: 'Data retrieved successfully.',
+        data: users,
+      }));
+  } catch (err) {
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
   }
-  return User.findById(req.params.id, (err, user) => {
-    if (user.length === 0) {
-      return res.status(404).json('No user found');
-    }
-    if (err) {
-      return res.status(500).send(err);
-    }
-    return res.status(200).json(user);
-  });
 };
 
-const registerUser = asyncHandler(async (req, res) => {
+const getUser = (req, res) => User.findById(req.params.id, (err, user) => {
+  if (user === null || user.length === 0) {
+    return res.status(404).json({
+      message: 'No user found. Please try again.',
+    });
+  }
+  if (err) {
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
+  }
+  return res.status(200).json({
+    message: 'Data retrieved successfully.',
+    data: user,
+  });
+});
+
+const deleteUser = async (req, res) => {
+  try {
+    await User.findById(req.params.id, (err, user) => {
+      if (user === null || user.length === 0) {
+        return res.status(404).json({
+          message: 'No user found. Please try again.',
+        });
+      }
+      if (err) {
+        return res.status(500).json({
+          message: `Internal server error: ${err}`,
+        });
+      }
+      User.findByIdAndRemove(
+        req.params.id,
+        (error, pr) => {
+          if (error) {
+            return res.status(500).json({
+              message: `Internal server error: ${error}`,
+            });
+          }
+          return res.status(200).json({
+            message: 'User deleted successfully.',
+            id: pr._id,
+          });
+        },
+      );
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
+  }
+};
+
+const signUpUser = asyncHandler(async (req, res) => {
   const {
-    role_id, first_name, last_name, password, email,
+    role_id,
+    first_name,
+    last_name,
+    email,
+    password,
   } = req.body;
-
-  const userExists = await User.findOne({ email });
-
-  if (userExists) {
-    return res.status(400).json('This user already exists.');
-    // throw new Error('User already exists.');
+  try {
+    const newUser = {
+      role_id,
+      first_name,
+      last_name,
+      email,
+      password: bcrypt.hashSync(password, 12),
+    };
+    await User.create(newUser)
+      .then(user => res.json({
+        message: 'User created successfully.',
+        data: user,
+      }));
+  } catch (err) {
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+      error: err,
+    });
   }
+});
 
-  const user = await User.create({
-    role_id, first_name, last_name, email, password,
-  });
-
-  return res.status(201).json({
-    role_id: user.role_id,
-    first_name: user.first_name,
-    last_name: user.last_name,
-    email: user.email,
-    token: user.generateToken(),
-  });
+const signInUser = asyncHandler(async (req, res) => {
+  const {
+    email,
+  } = req.body;
+  try {
+    User.findOne({
+      email,
+    })
+      .then(data => {
+        console.log(data, '%%%%%%%%%%%%');
+        if (!bcrypt.compareSync(req.body.password, '$2a$12$x/RiZHIYRPdcSRG876MuNuLPXqlVQvfC2xOBQcGiqvrPrnMnt8hJy')) {
+          return res.status(401).json({
+            message: 'Unauthorized user, credentials do not match. Try again. ',
+          });
+        }
+        const token = jwt.sign({
+          id: data.id,
+        }, process.env.JWT_SECRET, {
+          expiresIn: process.env.JWT_EXPIRE,
+        });
+        return res.status(200).json({
+          message: 'Signed in successfully.',
+          data: {
+            id: data.id,
+            first_name: data.first_name,
+            last_name: data.last_name,
+            email: data.email,
+            role_id: data.role_id,
+            accessToken: token,
+          },
+        });
+      });
+  } catch (err) {
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
+  }
 });
 
 module.exports.getAllUsers = getAllUsers;
 module.exports.getUser = getUser;
-module.exports.registerUser = registerUser;
+module.exports.deleteUser = deleteUser;
+module.exports.signInUser = signInUser;
+module.exports.signUpUser = signUpUser;

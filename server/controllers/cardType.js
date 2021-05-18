@@ -7,100 +7,131 @@ const {
 } = require('../models/CardType');
 
 const getAllCardTypes = async (req, res) => {
-  await CardType.find({}, (err, cardTypes) => {
-    if (err) res.status(500).send(err);
-    res.status(200).json(cardTypes);
-  });
+  try {
+    CardType.find({})
+      .then(cardTypes => res.status(200).json({
+        message: 'Data retrieved successfully.',
+        data: cardTypes,
+      }))
+      .catch(err => res.json({
+        error: err,
+      }));
+  } catch (err) {
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
+  }
 };
 
-const getCardType = (req, res) => {
-  if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-    return res.status(404).json('Wrong card type id format. Try again.');
+const getCardType = (req, res) => CardType.findById(req.params.id, (err, cardType) => {
+  if (cardType === null || cardType.length === 0) {
+    return res.status(404).json({
+      message: 'No card type found. Please try again.',
+    });
   }
-  return CardType.findById(req.params.id, (err, cardType) => {
-    if (cardType === null || cardType.length === 0) {
-      return res.status(404).json('No card type found');
-    }
-    if (err) {
-      return res.status(500).send(err);
-    }
-    return res.status(200).json(cardType);
+  if (err) {
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
+  }
+  return res.status(200).json({
+    message: 'Data retrieved successfully.',
+    data: cardType,
   });
-};
+});
 
 const addCardType = asyncHandler(async (req, res) => {
   const {
     name,
   } = req.body;
-  const prooductExists = await CardType.findOne({ name });
-
-  if (prooductExists) {
-    return res.status(400).json('This card type already exists.');
-  }
-
-  const cardType = await CardType.create({
+  const prooductExists = await CardType.findOne({
     name,
   });
 
-  return res.status(201).json({
-    name: cardType.name,
+  if (prooductExists) {
+    return res.status(400).json({
+      message: 'This cardType already exists.',
+    });
+  }
+
+  const cardType = await CardType.create(req.body);
+
+  return res.status(200).json({
+    message: 'CardType created successfully.',
+    data: cardType,
   });
 });
 
 const updateCardType = async (req, res) => {
   try {
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(404).json('Wrong card type id format. Try again.');
-    }
-    const newCardType = await CardType.findById(req.params.id, (err, cardType) => {
+    await CardType.findById(req.params.id, (err, cardType) => {
       if (cardType === null || cardType.length === 0) {
-        return res.status(404).json('No card type found');
+        return res.status(404).json({
+          message: 'No card type found. Please try again.',
+        });
       }
       if (err) {
-        return res.status(500).send(err);
+        return res.status(500).json({
+          message: `Internal server error: ${err}`,
+        });
       }
       CardType.findByIdAndUpdate(
         req.params.id,
-        req.body,
-        { new: true },
+        req.body, {
+          new: true,
+        },
         (error, pr) => {
-          if (error) return res.status(500).send(error);
-          return res.send(pr);
+          if (error) {
+            return res.status(500).json({
+              message: `Internal server error: ${error}`,
+            });
+          }
+          return res.status(200).json({
+            message: 'CardType updated successfully.',
+            data: pr,
+          });
         },
       );
     });
-    return newCardType;
   } catch (err) {
-    res.status(500).json('Internal server error');
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
   }
 };
 
 const deleteCardType = async (req, res) => {
   try {
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(404).json('Wrong card type id format. Try again.');
-    }
     await CardType.findById(req.params.id, (err, cardType) => {
       if (cardType === null || cardType.length === 0) {
-        return res.status(404).json('No card type found');
+        return res.status(404).json({
+          message: 'No card type type found. Please try again.',
+        });
       }
       if (err) {
-        return res.status(500).send(err);
+        return res.status(500).json({
+          message: `Internal server error: ${err}`,
+        });
       }
       CardType.findByIdAndRemove(
         req.params.id,
         (error, pr) => {
-          if (error) return res.status(500).send(error);
-          const response = {
-            message: 'Card type successfully deleted',
+          if (error) {
+            return res.status(500).json({
+              message: `Internal server error: ${error}`,
+            });
+          }
+          return res.status(200).json({
+            message: 'CardType deleted successfully.',
             id: pr._id,
-          };
-          return res.status(200).send(response);
+          });
         },
       );
     });
   } catch (err) {
-    res.status(500).json('Internal server error');
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
   }
 };
 

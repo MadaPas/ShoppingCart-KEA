@@ -3,79 +3,100 @@
 /* eslint-disable camelcase */
 const asyncHandler = require('express-async-handler');
 const {
-  Favourite,
+  FavouriteProduct,
 } = require('../models/FavouriteProduct');
 
 const getAllFavourites = async (req, res) => {
-  await Favourite.find({}, (err, favourites) => {
-    if (err) res.status(500).send(err);
-    res.status(200).json(favourites);
-  });
+  try {
+    FavouriteProduct.find({})
+      .then(favourites => res.status(200).json({
+        message: 'Data retrieved successfully.',
+        data: favourites,
+      }))
+      .catch(err => res.json({
+        error: err,
+      }));
+  } catch (err) {
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
+  }
 };
 
-const getFavourite = (req, res) => {
-  if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-    return res.status(404).json('Wrong favourite id format. Try again.');
+const getFavourite = (req, res) => FavouriteProduct.findById(req.params.id, (err, favourite) => {
+  if (favourite === null || favourite.length === 0) {
+    return res.status(404).json({
+      message: 'No favourite product found. Please try again.',
+    });
   }
-  return Favourite.findById(req.params.id, (err, favourite) => {
-    if (favourite === null || favourite.length === 0) {
-      return res.status(404).json('No favourite found');
-    }
-    if (err) {
-      return res.status(500).send(err);
-    }
-    return res.status(200).json(favourite);
+  if (err) {
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
+  }
+  return res.status(200).json({
+    message: 'Data retrieved successfully.',
+    data: favourite,
   });
-};
+});
 
 const addFavourite = asyncHandler(async (req, res) => {
   const {
     user_id,
     product_id,
   } = req.body;
-  const prooductExists = await Favourite.findOne({ user_id, product_id });
+  const exists = await FavouriteProduct.findOne({ user_id, product_id });
 
-  if (prooductExists) {
-    return res.status(400).json('This favourite already exists.');
+  if (exists) {
+    return res.status(400).json({
+      message: 'This favourite product already exists.',
+    });
   }
 
-  const favourite = await Favourite.create({
-    user_id,
-    product_id,
-  });
+  const favourite = await FavouriteProduct.create(req.body);
 
-  return res.status(201).json({
-    user_id: favourite.user_id,
-    product_id: favourite.product_id,
+  return res.status(200).json({
+    message: 'Favourite product added successfully.',
+    data: {
+      user_id: favourite.user_id,
+      product_id: favourite.product_id,
+    },
+
   });
 });
 
 const deleteFavourite = async (req, res) => {
   try {
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(404).json('Wrong Favourite id format. Try again.');
-    }
-    await Favourite.findById(req.params.id, (err, favourite) => {
+    await FavouriteProduct.findById(req.params.id, (err, favourite) => {
       if (favourite === null || favourite.length === 0) {
-        return res.status(404).json('No favourite found');
+        return res.status(404).json({
+          message: 'No favourite product found. Please try again.',
+        });
       }
       if (err) {
-        return res.status(500).send(err);
+        return res.status(500).json({
+          message: `Internal server error: ${err}`,
+        });
       }
-      Favourite.findByIdAndRemove(
+      FavouriteProduct.findByIdAndRemove(
         req.params.id,
         (error, pr) => {
-          if (error) return res.status(500).send(error);
-          const response = {
-            message: 'Favourite successfully deleted',
+          if (error) {
+            return res.status(500).json({
+              message: `Internal server error: ${error}`,
+            });
+          }
+          return res.status(200).json({
+            message: 'Favourite product deleted successfully.',
             id: pr._id,
-          };
-          return res.status(200).send(response);
+          });
         },
       );
     });
   } catch (err) {
-    res.status(500).json('Internal server error');
+    return res.status(500).json({
+      message: `Internal server error: ${err}`,
+    });
   }
 };
 
