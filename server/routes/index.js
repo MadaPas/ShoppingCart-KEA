@@ -1,5 +1,5 @@
 const express = require('express');
-const userRoutes = require('./user.js');
+const userRoutes = require('./api/user.js');
 const productRoutes = require('./api/product.js');
 const brandsRoutes = require('./api/brand.js');
 const rolesRoutes = require('./api/role.js');
