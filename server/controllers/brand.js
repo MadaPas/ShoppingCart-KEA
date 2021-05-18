@@ -49,9 +49,6 @@ const addBrand = asyncHandler(async (req, res) => {
 
 const updateBrand = async (req, res) => {
   try {
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(404).json('Wrong brand id format. Try again.');
-    }
     const newBrand = await Brand.findById(req.params.id, (err, brand) => {
       if (brand === null || brand.length === 0) {
         return res.status(404).json('No brand found. Please try again.');
@@ -74,15 +71,12 @@ const updateBrand = async (req, res) => {
       newBrand,
     });
   } catch (err) {
-    res.status(500).json('Internal server error');
+    return res.status(500).json(`Internal server error: ${err}`);
   }
 };
 
 const deleteBrand = async (req, res) => {
   try {
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(404).json('Wrong brand id format. Try again.');
-    }
     await Brand.findById(req.params.id, (err, brand) => {
       if (brand === null || brand.length === 0) {
         return res.status(404).json('No brand found. Please try again.');
@@ -102,7 +96,7 @@ const deleteBrand = async (req, res) => {
       );
     });
   } catch (err) {
-    res.status(500).json('Internal server error');
+    return res.status(500).json(`Internal server error: ${err}`);
   }
 };
 
