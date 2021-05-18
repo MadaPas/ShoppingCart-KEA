@@ -7,10 +7,13 @@ const {
 } = require('../models/Brand');
 
 const getAllBrands = async (req, res) => {
-  await Brand.find({}, (err, brands) => {
-    if (err) res.status(500).send(err);
-    res.status(200).json(brands);
-  });
+  try {
+    Brand.find({})
+      .then(brands => res.status(200).json(brands))
+      .catch(err => res.send(err));
+  } catch (err) {
+    return res.status(500).json(`Internal server error: ${err}`);
+  }
 };
 
 const getBrand = (req, res) => {
