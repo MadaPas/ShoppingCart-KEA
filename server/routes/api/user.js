@@ -4,7 +4,7 @@ const router = express.Router();
 
 const {
   getAllUsers, getUser, registerUser,
-} = require('../controllers/user');
+} = require('../../controllers/user');
 
 router.get('/', getAllUsers); // TODO - isAdmin (with access to route)
 router.get('/:id', getUser); // TODO - isAdmin (with access to route)
