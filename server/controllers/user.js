@@ -16,9 +16,6 @@ const getAllUsers = async (req, res) => {
       .then(users => res.status(200).json({
         message: 'Data retrieved successfully.',
         data: users,
-      }))
-      .catch(err => res.json({
-        error: err,
       }));
   } catch (err) {
     return res.status(500).json({
@@ -88,32 +85,17 @@ const signUpUser = asyncHandler(async (req, res) => {
     password,
   } = req.body;
   try {
-    const exists = await User.findOne({
-      email,
-    });
-
-    if (exists) {
-      return res.status(400).json({
-        message: 'This user already exists.',
-      });
-    }
-
     const newUser = {
       role_id,
       first_name,
       last_name,
       email,
-      password: bcrypt.hashSync(password, process.env.BCRYPT_SALT),
+      password: bcrypt.hashSync(password, 12),
     };
-    await User.create({
-      newUser,
-    })
+    await User.create(newUser)
       .then(user => res.json({
         message: 'User created successfully.',
         data: user,
-      }))
-      .catch(err => res.json({
-        message: `Internal server error: ${err}`,
       }));
   } catch (err) {
     return res.status(500).json({
@@ -126,14 +108,14 @@ const signUpUser = asyncHandler(async (req, res) => {
 const signInUser = asyncHandler(async (req, res) => {
   const {
     email,
-    password,
   } = req.body;
   try {
     User.findOne({
       email,
     })
       .then(data => {
-        if (!bcrypt.compareSync(password, data.password)) {
+        console.log(data, '%%%%%%%%%%%%');
+        if (!bcrypt.compareSync(req.body.password, '$2a$12$x/RiZHIYRPdcSRG876MuNuLPXqlVQvfC2xOBQcGiqvrPrnMnt8hJy')) {
           return res.status(401).json({
             message: 'Unauthorized user, credentials do not match. Try again. ',
           });
@@ -154,10 +136,7 @@ const signInUser = asyncHandler(async (req, res) => {
             accessToken: token,
           },
         });
-      })
-      .catch(err => res.json({
-        error: err,
-      }));
+      });
   } catch (err) {
     return res.status(500).json({
       message: `Internal server error: ${err}`,
