@@ -85,7 +85,7 @@ const deleteBrand = async (req, res) => {
     }
     await Brand.findById(req.params.id, (err, brand) => {
       if (brand === null || brand.length === 0) {
-        return res.status(404).json('No brand found');
+        return res.status(404).json('No brand found. Please try again.');
       }
       if (err) {
         return res.status(500).send(err);
@@ -94,11 +94,10 @@ const deleteBrand = async (req, res) => {
         req.params.id,
         (error, pr) => {
           if (error) return res.status(500).send(error);
-          const response = {
-            message: 'Brand successfully deleted',
+          return res.status(200).json({
+            message: 'Brand deleted successfully.',
             id: pr._id,
-          };
-          return res.status(200).send(response);
+          });
         },
       );
     });
