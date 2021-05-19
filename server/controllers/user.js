@@ -13,10 +13,12 @@ const {
 const getAllUsers = async (req, res) => {
   try {
     await User.find({})
-      .then(users => res.status(200).json({
-        message: 'Data retrieved successfully.',
-        data: users,
-      }));
+      .then(users => {
+        res.status(200).json({
+          message: 'Data retrieved successfully.',
+          data: users,
+        });
+      });
   } catch (err) {
     return res.status(500).json({
       message: `Internal server error: ${err}`,
@@ -114,21 +116,20 @@ const signInUser = asyncHandler(async (req, res) => {
       email,
     })
       .then(data => {
-        console.log(data, '%%%%%%%%%%%%');
-        if (!bcrypt.compareSync(req.body.password, '$2a$12$x/RiZHIYRPdcSRG876MuNuLPXqlVQvfC2xOBQcGiqvrPrnMnt8hJy')) {
+        if (!bcrypt.compareSync(req.body.password, data.password)) {
           return res.status(401).json({
             message: 'Unauthorized user, credentials do not match. Try again. ',
           });
         }
         const token = jwt.sign({
-          id: data.id,
+          id: data._id,
         }, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_EXPIRE,
         });
         return res.status(200).json({
           message: 'Signed in successfully.',
           data: {
-            id: data.id,
+            id: data._id,
             first_name: data.first_name,
             last_name: data.last_name,
             email: data.email,

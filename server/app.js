@@ -19,10 +19,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
-  res.status(200).send('Our API is running...')
-    .catch(() => {
-      res.status(500).json('Internal server error');
-    });
+  res.status(200).send('Our API is running...');
 });
 
 app.use('/api', routes);
