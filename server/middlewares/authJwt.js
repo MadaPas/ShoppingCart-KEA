@@ -23,7 +23,7 @@ const verifyToken = (req, res, next) => {
 
 const isAdmin = (req, res, next) => {
   User.findById(req.id).then(user => {
-    if (user.role_id === 1) {
+    if (user.role_id.toString() === '607d680424b72122ed6bcd82') {
       next();
       return;
     }
@@ -35,7 +35,7 @@ const isAdmin = (req, res, next) => {
 
 const isEmployeeOrAdmin = (req, res, next) => {
   User.findById(req.id).then(user => {
-    if (user.role_id === 1 || user.role_id === 2) {
+    if (user.role_id.toString() === '607d680424b72122ed6bcd82' || user.role_id.toString() === '607d67fe24b72122ed6bcd81') {
       next();
       return;
     }
