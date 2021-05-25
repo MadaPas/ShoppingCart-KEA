@@ -1,14 +1,22 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-console */
 /* eslint-disable max-len */
-const { User } = require('../models/User');
+const {
+  User,
+} = require('../models/User');
 
 const verifyExistingUser = (req, res, next) => {
-  const { email } = req.body;
-  User.findOne({ email })
+  const {
+    email,
+  } = req.body;
+  User.findOne({
+    email,
+  })
     .then(data => {
       if (!data) {
-        return res.status(404).send('User not found!');
+        return res.status(404).json({
+          message: 'User not found!',
+        });
       }
       next();
     })
@@ -16,11 +24,17 @@ const verifyExistingUser = (req, res, next) => {
 };
 
 const verifyNewUser = (req, res, next) => {
-  const { email } = req.body;
-  User.findOne({ email })
+  const {
+    email,
+  } = req.body;
+  User.findOne({
+    email,
+  })
     .then(data => {
       if (data) {
-        return res.status(409).send('User already exists!');
+        return res.status(409).json({
+          message: 'User already exists!',
+        });
       }
       next();
     })
