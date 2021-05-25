@@ -56,6 +56,20 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
+// Routes
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     description: Use to request index page
+ *     tags:
+ *       - index
+ *     responses:
+ *       '200':
+ *         description: A successful response, API is running
+ *       '500':
+ *         description: Internal server error
+ */
 app.get('/', (req, res) => {
   res.status(200).send('Our API is running...');
 });
