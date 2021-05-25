@@ -4,7 +4,19 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../models/User');
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers['auth-token'];
+  let token = null;
+  token = req.headers['auth-token'];
+  // To work with Swagger
+  try {
+    if (req.headers.authorization.indexOf('Bearer ') === 0) {
+      // eslint-disable-next-line prefer-destructuring
+      token = req.headers.authorization.split(' ')[1];
+    }
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.log('Swagger token error');
+  }
+
   if (!token) {
     return res.status(403).send({
       message: 'No token provided!',
