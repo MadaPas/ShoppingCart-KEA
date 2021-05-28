@@ -15,11 +15,11 @@ const CartItemSchema = new mongoose.Schema(
       allowNull: false,
       primaryKey: true,
     },
-    invoice_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'invoices',
-      allowNull: false,
-    },
+    // invoice_id: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: 'invoices',
+    //   allowNull: false,
+    // },
     quantity: {
       type: Number,
     },
@@ -30,6 +30,6 @@ const CartItemSchema = new mongoose.Schema(
   },
 );
 
-const CardItem = mongoose.model('card_items', CartItemSchema);
+const CardItem = mongoose.model('cart_items', CartItemSchema);
 
 module.exports.CardItem = CardItem;

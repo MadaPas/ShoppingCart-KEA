@@ -135,16 +135,6 @@ const {
  *         description: Forbidden, no token provided or require admin role
  *       '500':
  *         description: Internal server error
- * /api/products/views/products:
- *   get:
- *     description: Use to request all info about products and their brands for customers
- *     tags:
- *       - products
- *     responses:
- *       '200':
- *         description: A successful response, returned all products
- *       '500':
- *         description: Internal server error
  */
 
 router.get('/', [authJwt.verifyToken, authJwt.isEmployeeOrAdmin, getAllProducts]); //
@@ -152,6 +142,5 @@ router.get('/:id', [authParams.verifyIdParam, getProduct]);
 router.post('/', [authJwt.verifyToken, authJwt.isEmployeeOrAdmin, addProduct]);
 router.put('/:id', [authParams.verifyIdParam, authJwt.verifyToken, authJwt.isEmployeeOrAdmin, updateProduct]);
 router.delete('/:id', [authParams.verifyIdParam, authJwt.verifyToken, authJwt.isAdmin, deleteProduct]);
-// router.get('/views/products', getProductsForUsers);
 
 module.exports = router;
