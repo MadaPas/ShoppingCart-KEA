@@ -32,17 +32,20 @@ const {
  *       - cards
  *     security:
  *       -   bearerAuth: []
- *     parameters:
- *       - in: body
- *         name: cardType
- *         description: The card type to create
- *         schema:
- *           type: object
- *           required:
- *            - name
- *           properties:
- *             name:
- *               type: string
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            name: cardType
+ *            description: The card type to create
+ *            schema:
+ *              type: object
+ *              required:
+ *                - name
+ *              properties:
+ *                name:
+ *                  type: string
+ *                  default: GOOGLECARD
  *     responses:
  *       '201':
  *         description: Created, added new card type
@@ -98,6 +101,20 @@ const {
  *         schema:
  *           type: integer
  *           format: int64
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            name: cardType
+ *            description: The card type to create
+ *            schema:
+ *              type: object
+ *              required:
+ *                - name
+ *              properties:
+ *                name:
+ *                  type: string
+ *                  default: SUPERCARD
  *     responses:
  *       '200':
  *         description: A successful response, updated card type

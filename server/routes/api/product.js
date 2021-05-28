@@ -21,6 +21,8 @@ const {
  *     description: Use to request all products
  *     tags:
  *       - products
+ *     security:
+ *       -   bearerAuth: []
  *     responses:
  *       '200':
  *         description: A successful response, returned all products

@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
 
-// Holds information about cart_items - stored into the sequelize object from our index.js
 const CartItemSchema = new mongoose.Schema(
   {
     user_id: {
@@ -14,7 +13,7 @@ const CartItemSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'products',
       allowNull: false,
-      primaryKey: true, // Setting two primary keys will create a 'composite key' in Sequelize
+      primaryKey: true,
     },
     invoice_id: {
       type: mongoose.Schema.Types.ObjectId,

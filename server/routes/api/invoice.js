@@ -28,7 +28,7 @@ const {
  *       '401':
  *         description: Unauthorized
  *       '403':
- *         description: Forbidden, no token provided or require employee or admin role
+ *         description: Forbidden, no token provided or requires employee or admin role
  *       '500':
  *         description: Internal server error
  *   post:
@@ -36,48 +36,50 @@ const {
  *     tags:
  *       - invoices
  *       - cart items
- *     parameters:
- *       - in: body
- *         name: invoice
- *         description: The invoice to be created
- *         schema:
- *           type: object
- *           required:
- *            - card_type_id
- *            - card_number
- *            - card_holder
- *            - user_id
- *            - product_id
- *            - invoice_id
- *            - quantity
- *            - unit_price
- *           properties:
- *             invoice:
- *               type: object
- *               properties:
- *                 card_type_id:
- *                   type: integer
- *                 card_number:
- *                   type: integer
- *                 card_holder:
- *                   type: string
- *                 date:
- *                   type: string
- *                 total_price:
- *                    type: integer
- *             cart_items:
- *               type: object
- *               properties:
- *                 user_id:
- *                   type: integer
- *                 product_id:
- *                   type: integer
- *                 invoice_id:
- *                   type: integer
- *                 quantity:
- *                   type: integer
- *                 unit_price:
- *                    type: number
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            name: invoice
+ *            description: The invoice to be created
+ *            schema:
+ *              type: object
+ *              required:
+ *                - card_type_id
+ *                - card_number
+ *                - card_holder
+ *                - user_id
+ *                - product_id
+ *                - invoice_id
+ *                - quantity
+ *                - unit_price
+ *              properties:
+ *                invoice:
+ *                  type: object
+ *                  properties:
+ *                    card_type_id:
+ *                      type: integer
+ *                    card_number:
+ *                      type: integer
+ *                    card_holder:
+ *                      type: string
+ *                    date:
+ *                      type: string
+ *                    total_price:
+ *                        type: integer
+ *                cart_items:
+ *                  type: object
+ *                  properties:
+ *                    user_id:
+ *                      type: integer
+ *                    product_id:
+ *                      type: integer
+ *                    invoice_id:
+ *                      type: integer
+ *                    quantity:
+ *                      type: integer
+ *                    unit_price:
+ *                        type: number
  *     responses:
  *       '201':
  *         description: Created, added new invoice and cart item

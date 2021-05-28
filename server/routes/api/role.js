@@ -40,17 +40,20 @@ const {
  *       - roles
  *     security:
  *       -   bearerAuth: []
- *     parameters:
- *       - in: body
- *         name: role
- *         description: The role to create
- *         schema:
- *           type: object
- *           required:
- *            - name
- *           properties:
- *             name:
- *               type: string
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            name: role
+ *            description: The role to create
+ *            schema:
+ *              type: object
+ *              required:
+ *                - name
+ *              properties:
+ *                name:
+ *                  type: string
+ *                  default: NewRole
  *     responses:
  *       '201':
  *         description: Created, added new role
@@ -104,6 +107,20 @@ const {
  *         schema:
  *           type: integer
  *           format: int64
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            name: role
+ *            description: The role to create
+ *            schema:
+ *              type: object
+ *              required:
+ *                - name
+ *              properties:
+ *                name:
+ *                  type: string
+ *                  default: UpdatedRole
  *     responses:
  *       '200':
  *         description: A successful response, updated role

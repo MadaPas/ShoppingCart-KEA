@@ -37,20 +37,22 @@ const {
  *       - favourites
  *     security:
  *       -   bearerAuth: []
- *     parameters:
- *       - in: body
- *         name: favourite
- *         description: The favourite item to create
- *         schema:
- *           type: object
- *           required:
- *             - product_id
- *             - user_id
- *           properties:
- *             product_id:
- *               type: integer
- *             user_id:
- *               type: integer
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            name: favourite
+ *            description: The favourite item to create
+ *            schema:
+ *              type: object
+ *              required:
+ *                - product_id
+ *                - user_id
+ *              properties:
+ *                product_id:
+ *                  type: integer
+ *                user_id:
+ *                  type: integer
  *     responses:
  *       '201':
  *         description: Created, added new favourite product

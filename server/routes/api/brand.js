@@ -32,19 +32,22 @@ const {
  *       - brands
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: body
- *         name: brand
- *         description: The brand to create
- *         schema:
- *           type: object
- *           required:
- *            - name
- *           properties:
- *             name:
- *               type: string
- *             description:
- *               type: string
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            name: brand
+ *            description: The brand to create
+ *            schema:
+ *              type: object
+ *              required:
+ *                - name
+ *              properties:
+ *                name:
+ *                  type: string
+ *                description:
+ *                  type: string
+ *                  default: Belissimooooo
  *     responses:
  *       '201':
  *         description: Created, added new brand
@@ -103,6 +106,22 @@ const {
  *         schema:
  *           type: integer
  *           format: int64
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            name: brand
+ *            description: The brand to create
+ *            schema:
+ *              type: object
+ *              required:
+ *                - name
+ *              properties:
+ *                name:
+ *                  type: string
+ *                description:
+ *                  type: string
+ *                  default: Incredibilis
  *     responses:
  *       '200':
  *         description: A successful response, updated brand
