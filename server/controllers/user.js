@@ -118,7 +118,7 @@ const signInUser = asyncHandler(async (req, res) => {
       .then(data => {
         if (!bcrypt.compareSync(req.body.password, data.password)) {
           return res.status(401).json({
-            message: 'Unauthorized user, credentials do not match. Try again. ',
+            message: 'Unauthorized user, credentials do not match. Please try again. ',
           });
         }
         const token = jwt.sign({
